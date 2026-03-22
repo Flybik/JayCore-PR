@@ -9,6 +9,7 @@ guidebook-reagent-effect-description =
         [0] .
        *[other] , пока { $conditions }.
     }
+
 guidebook-reagent-name = [bold][color={ $color }]{ CAPITALIZE($name) }[/color][/bold]
 guidebook-reagent-recipes-header = Рецепт
 guidebook-reagent-recipes-reagent-display = [bold]{ $reagent }[/bold] \[{ $ratio }\]
@@ -21,6 +22,7 @@ guidebook-reagent-effects-metabolites = Усваивается в { $items }.
 guidebook-reagent-effects-metabolite-item = { $reagent } со скоростью в { NATURALPERCENT($rate, 2) }
 guidebook-reagent-plant-metabolisms-header = Метаболизм растений
 guidebook-reagent-plant-metabolisms-rate = [bold]Метаболизм растений[/bold] [color=gray](1 единица каждые 3 секунды базово)[/color]
+guidebook-reagent-physical-description = [italic]На вид вещество { $description }.[/italic].
 guidebook-reagent-recipes-mix-info =
     { $minTemp ->
         [0]
@@ -34,4 +36,3 @@ guidebook-reagent-recipes-mix-info =
                *[false] выше { $minTemp }K
             }
     }
-guidebook-reagent-physical-description = [italic]На вид вещество { $description }.[/italic].
