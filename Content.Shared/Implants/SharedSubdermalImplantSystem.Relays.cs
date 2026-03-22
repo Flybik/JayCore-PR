@@ -1,10 +1,10 @@
 using Content.Shared.Chat;
+using Content.Shared.Corvax.TTS;
 using Content.Shared.IdentityManagement.Components;
 using Content.Shared.Implants.Components;
 using Content.Shared.Interaction;
 using Content.Shared.Interaction.Events;
 using Content.Shared.Mobs;
-using Content.Shared.Corvax.TTS;
 
 namespace Content.Shared.Implants;
 

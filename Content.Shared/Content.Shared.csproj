@@ -18,6 +18,16 @@
     <ProjectReference Include="..\Corvax\Content.Corvax.Interfaces.Shared\Content.Corvax.Interfaces.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="_Wega\Security\Components\SecApartmentComponent.cs" />
+    <Compile Remove="_Wega\Security\SecApartmentEnums.cs" />
+    <Compile Remove="_Wega\Security\SecApartmentUi.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="_Wega\Security\Components\" />
+  </ItemGroup>
+
   <Import Project="..\RobustToolbox\MSBuild\Robust.Properties.targets" />
   <Import Project="..\RobustToolbox\MSBuild\Robust.CompNetworkGenerator.targets" />
 </Project>

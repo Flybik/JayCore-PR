@@ -347,7 +347,6 @@
     - id: DrinkHosFlask
     - id: PlushieLizardJobHeadofsecurity
       prob: 0.02
-    - id: SecApartmentTablet # Corvax-Wega-SecApartment
     # Corvax-Start
     - id: ClothingHeadHatCapHoS
       prob: 0.5
