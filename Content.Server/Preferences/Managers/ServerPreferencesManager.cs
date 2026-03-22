@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Content.Corvax.Interfaces.Shared;
+using Content.Server._FunkyStation.Records;
 using Content.Server.Database;
 using Content.Shared.Body;
 using Content.Shared.CCVar;
@@ -40,6 +41,7 @@ namespace Content.Server.Preferences.Managers
         [Dependency] private readonly IPlayerManager _playerManager = default!;
         [Dependency] private readonly IDependencyCollection _dependencies = default!;
         [Dependency] private readonly ILogManager _log = default!;
+        [Dependency] private readonly IServerPreferencesManager _prefs = default!; // LP edit
         [Dependency] private readonly UserDbDataManager _userDb = default!;
         [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
         [Dependency] private readonly MarkingManager _marking = default!;
@@ -78,20 +80,27 @@ namespace Content.Server.Preferences.Managers
             }
         }
 
-        internal PlayerPreferences ConvertPreferences(Preference prefs)
+        internal PlayerPreferences ConvertPreferences(Preference prefs, NetUserId player)
         {
-            var maxSlot = prefs.Profiles.Max(p => p.Slot) + 1;
+            var tier = SponsorSimpleManager.GetTier(player);
+            var maxSlot = prefs.Profiles.Max(p => p.Slot) + 1 + tier * 5;
             var profiles = new Dictionary<int, HumanoidCharacterProfile>(maxSlot);
             foreach (var profile in prefs.Profiles)
             {
                 profiles[profile.Slot] = ConvertProfiles(profile);
             }
 
+            //LP edit start
+            CustomGhostPrototype? customGhost = null;
+            if (_prefs.TryGetCachedPreferences(player, out var CustomGhost)) //LP edit вынужденый хардкод
+                customGhost = _prototypeManager.Index(CustomGhost.CustomGhost);
+            //LP edit end
+
             var constructionFavorites = new List<ProtoId<ConstructionPrototype>>(prefs.ConstructionFavorites.Count);
             foreach (var favorite in prefs.ConstructionFavorites)
                 constructionFavorites.Add(new ProtoId<ConstructionPrototype>(favorite));
 
-            return new PlayerPreferences(profiles, prefs.SelectedCharacterSlot, Color.FromHex(prefs.AdminOOCColor), constructionFavorites);
+            return new PlayerPreferences(profiles, prefs.SelectedCharacterSlot, Color.FromHex(prefs.AdminOOCColor), constructionFavorites, new ProtoId<CustomGhostPrototype>(customGhost?.ID ?? "default")); // LP edit
         }
 
         internal HumanoidCharacterProfile ConvertProfiles(Profile profile)
@@ -183,8 +192,8 @@ namespace Content.Server.Preferences.Managers
                 profile.FlavorText,
                 species,
                 voice, // Corvax-TTS
-                height, // Goobstation: port EE height/width sliders
-                width, // Goobstation: port EE height/width sliders
+                profile.Height, // Goobstation: port EE height/width sliders
+                profile.Height, // Goobstation: port EE height/width sliders
                 profile.Age,
                 sex,
                 gender,
@@ -200,8 +209,8 @@ namespace Content.Server.Preferences.Managers
                 antags.ToHashSet(),
                 traits.ToHashSet(),
                 loadouts,
-                barkVoice,
-                cdCharacterRecords
+                profile.BarkVoice, // GoobStation edit
+                (profile.CDProfile != null && profile.CDProfile.CharacterRecords != null) ? RecordsSerialization.Deserialize(profile.CDProfile.CharacterRecords) : null
             );
         }
 
@@ -410,7 +419,7 @@ namespace Content.Server.Preferences.Managers
                 async Task LoadPrefs()
                 {
                     var prefs = await GetOrCreatePreferencesAsync(session.UserId, cancel);
-                    prefsData.Prefs = ConvertPreferences(prefs);
+                    prefsData.Prefs = ConvertPreferences(prefs, session.UserId);
                 }
             }
         }

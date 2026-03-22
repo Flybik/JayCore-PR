@@ -169,7 +169,7 @@ namespace Content.IntegrationTests.Tests.Preferences
             Assert.That(prefs, Is.Not.Null);
             await server.WaitAssertion(() =>
             {
-                var converted = preferences.ConvertPreferences(prefs);
+                var converted = preferences.ConvertPreferences(prefs, username);
 
                 Assert.That(converted.Characters, Has.Count.EqualTo(1));
                 Assert.That(converted.Characters[0].Species, Is.Not.EqualTo(InvalidSpecies));
