@@ -12,4 +12,3 @@ comp-window-damaged-6 = [color=red]Всё в глубоких трещинах, 
 
 # Shown when knocking on a window
 comp-window-knock = *тук тук*
-

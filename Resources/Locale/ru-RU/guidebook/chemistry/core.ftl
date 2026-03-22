@@ -9,7 +9,6 @@ guidebook-reagent-effect-description =
         [0] .
        *[other] , пока { $conditions }.
     }
-
 guidebook-reagent-name = [bold][color={ $color }]{ CAPITALIZE($name) }[/color][/bold]
 guidebook-reagent-recipes-header = Рецепт
 guidebook-reagent-recipes-reagent-display = [bold]{ $reagent }[/bold] \[{ $ratio }\]
