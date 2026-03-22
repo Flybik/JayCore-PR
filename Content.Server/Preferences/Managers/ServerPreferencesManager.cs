@@ -183,6 +183,8 @@ namespace Content.Server.Preferences.Managers
                 profile.FlavorText,
                 species,
                 voice, // Corvax-TTS
+                height, // Goobstation: port EE height/width sliders
+                width, // Goobstation: port EE height/width sliders
                 profile.Age,
                 sex,
                 gender,
@@ -197,7 +199,9 @@ namespace Content.Server.Preferences.Managers
                 (PreferenceUnavailableMode) profile.PreferenceUnavailable,
                 antags.ToHashSet(),
                 traits.ToHashSet(),
-                loadouts
+                loadouts,
+                barkVoice,
+                cdCharacterRecords
             );
         }
 

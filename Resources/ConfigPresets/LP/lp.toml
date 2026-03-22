@@ -106,3 +106,5 @@ out_of_game_frequency = 360
 [tts]
 announce_voice = "glados"
 
+[adminlogs]
+high_log_playtime = -1

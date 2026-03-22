@@ -14,6 +14,8 @@ namespace Content.Client._LP.Mining.Components
     [GenerateTypedNameReferences]
     public sealed partial class MiningCircuitboardRepairControl : FancyWindow
     {
+        public event Action? OnScan;
+
         public MiningCircuitboardRepairControl()
         {
             RobustXamlLoader.Load(this);
