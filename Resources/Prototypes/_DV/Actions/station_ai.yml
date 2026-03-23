@@ -139,8 +139,11 @@
     event: !type:StationAiHealthChangeActionEvent
       damage:
         types:
-          Burn: -150
-          Brute: -150
+          Heat: -150
+          Cold: -150
+          Blunt: -150
+          Piercing: -150
+          Slash: -150
 
 - type: entity
   id: ActionStationAiEmergencySealant
