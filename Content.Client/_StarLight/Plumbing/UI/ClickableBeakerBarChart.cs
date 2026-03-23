@@ -1,4 +1,4 @@
-﻿using Content.Client.Medical.Cryogenics;
+using Content.Client.Medical.Cryogenics;
 using Content.Client.Stylesheets.Colorspace;
 using Content.Client.Stylesheets.Palette;
 using Robust.Client.Graphics;
