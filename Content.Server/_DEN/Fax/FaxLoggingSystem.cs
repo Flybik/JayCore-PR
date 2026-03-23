@@ -18,8 +18,11 @@ public sealed class FaxLoggingSystem : EntitySystem
     private static readonly HttpClient _httpClient = new();
     private string? _webhookUrl;
 
-    // Лимит для Embed Description в Discord
     private const int DiscordMaxDescription = 4000;
+
+    private static readonly Regex StationGoalPattern = new(
+        @"^═+\[color=#36A55D\]ЦЕЛЬ СТАНЦИИ",
+        RegexOptions.Compiled | RegexOptions.Multiline);
 
     private static readonly TagReplacement[] _replacements =
     {
@@ -55,6 +58,12 @@ public sealed class FaxLoggingSystem : EntitySystem
         if (string.IsNullOrWhiteSpace(msg.Content))
             return;
 
+        if (StationGoalPattern.IsMatch(msg.Content))
+        {
+            _sawmill.Debug("Системный факс проигнорирован (Цель станции).");
+            return;
+        }
+
         _ = SendFaxToDiscord(msg);
     }
 
@@ -80,7 +89,7 @@ public sealed class FaxLoggingSystem : EntitySystem
                 {
                     title = $"📠 Исходящий факс от {msg.DestinationAddress}",
                     description = content,
-                    color = 3447003, // Синий цвет
+                    color = 3447003,
                     footer = new
                     {
                         text = $"Печати: {stamps}"
