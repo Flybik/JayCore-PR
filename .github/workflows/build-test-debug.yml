@@ -38,6 +38,13 @@ jobs:
       with:
         dotnet-version: 10.0.x
 
+    - name: Allocate swap space
+      run: |
+        sudo fallocate -l 10G /swapfile
+        sudo chmod 600 /swapfile
+        sudo mkswap /swapfile
+        sudo swapon /swapfile
+
     - name: Install dependencies
       run: dotnet restore
 
@@ -50,8 +57,8 @@ jobs:
     - name: Run Content.IntegrationTests
       shell: pwsh
       run: |
-        $env:DOTNET_gcServer=1
-        dotnet test --no-build -m:1 --configuration DebugOpt Content.IntegrationTests/Content.IntegrationTests.csproj -- NUnit.ConsoleOut=0 NUnit.MapWarningTo=Failed
+        $env:DOTNET_gcServer=0
+        dotnet test --no-build --logger:"console;verbosity=normal" --configuration DebugOpt Content.IntegrationTests/Content.IntegrationTests.csproj -- NUnit.ConsoleOut=0 NUnit.MapWarningTo=Failed
   ci-success:
     name: Build & Test Debug
     needs:
