@@ -38,7 +38,6 @@ public sealed partial class HumanoidProfileEditor
 
             // begin funky - flavor text is in the Records tab now
             _recordsTab.PersonalInfoContainer.Visible = false;
-            _recordsTab.PersonalInfoContainer.RemoveChild(_flavorText);
             // end funky
             TabContainer.RemoveChild(_flavorText);
             _flavorText.OnFlavorTextChanged -= OnFlavorTextChange;
