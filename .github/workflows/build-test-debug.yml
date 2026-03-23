@@ -38,13 +38,6 @@ jobs:
       with:
         dotnet-version: 10.0.x
 
-    - name: Allocate swap space
-      run: |
-        sudo fallocate -l 10G /swapfile
-        sudo chmod 600 /swapfile
-        sudo mkswap /swapfile
-        sudo swapon /swapfile
-
     - name: Install dependencies
       run: dotnet restore
 
