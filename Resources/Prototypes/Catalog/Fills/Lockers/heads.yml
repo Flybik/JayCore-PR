@@ -52,6 +52,8 @@
       conditions:
       - !type:PlayerCountCondition
         max: 15
+    - id: PlushieLizardJobCaptain
+      prob: 0.02
     - id: SecApartmentTablet # Corvax-SecApartment
     - id: PlushieLizardJobCaptain
       prob: 0.02
