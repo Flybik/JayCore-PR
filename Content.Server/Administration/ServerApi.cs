@@ -12,7 +12,6 @@ using Content.Server.Database;
 using Content.Server.Afk;
 using Content.Server.GameTicking;
 using Content.Server.GameTicking.Presets;
-using Content.Server.Administration.Managers;
 using Content.Shared.Administration;
 using Content.Server.Maps;
 using Content.Server.RoundEnd;
@@ -379,7 +378,8 @@ public sealed partial class ServerApi : IPostInjectInit
                 info.AddAddress(player.Channel.RemoteEndPoint.Address);
             }
 
-            _bans.CreateServerBan(info);
+            var banid = await _bans.CreateServerBan(info);
+            _bans.WebhookUpdateBans(info, banid);
             await RespondOk(context);
 
             _sawmill.Info($"Banned player {located.Username} ({located.UserId}) for {reason} lasting {body.Minutes ?? 0} minutes by {FormatLogActor(actor)}");
