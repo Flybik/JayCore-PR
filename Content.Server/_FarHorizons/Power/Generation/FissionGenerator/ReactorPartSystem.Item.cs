@@ -2,6 +2,7 @@ using Content.Server.Atmos.EntitySystems;
 using Content.Shared._FarHorizons.Power.Generation.FissionGenerator;
 using Content.Shared.Atmos;
 using Content.Shared.Damage.Components;
+using Content.Shared.Damage.Systems;
 using Content.Shared.Examine;
 using Content.Shared.Nutrition;
 using Content.Shared.Radiation.Components;
@@ -11,6 +12,7 @@ namespace Content.Server._FarHorizons.Power.Generation.FissionGenerator;
 public sealed partial class ReactorPartSystem
 {
     [Dependency] private readonly EntityManager _entityManager = default!;
+    [Dependency] private readonly DamageableSystem _damageableSystem = default!;
     [Dependency] private readonly SharedPointLightSystem _lightSystem = default!;
 
     private float _burnDiv => (ReactorPartBurnTemp - ReactorPartHotTemp) / 5; // The 5 is how much heat damage insulated gloves protect from
@@ -111,10 +113,15 @@ public sealed partial class ReactorPartSystem
 
         var properties = comp.Properties;
 
-        if (!_entityManager.TryGetComponent<DamageableComponent>(args.Target, out var damageable) || damageable.Damage.DamageDict == null)
+        if (!_entityManager.TryGetComponent<DamageableComponent>(args.Target, out var damageable))
             return;
 
-        var dict = damageable.Damage.DamageDict;
+        var damageSpecifier = _damageableSystem.GetAllDamage((args.Target, damageable));
+
+        if (damageSpecifier.DamageDict.Count == 0)
+            return;
+
+        var dict = damageSpecifier.DamageDict;
 
         var dmgKey = "Radiation";
         var dmg = (properties.NeutronRadioactivity * 20) + (properties.Radioactivity * 10) + (properties.FissileIsotopes * 5);
