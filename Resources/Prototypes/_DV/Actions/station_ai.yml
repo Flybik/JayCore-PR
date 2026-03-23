@@ -138,9 +138,8 @@
       - BorgChassis
     event: !type:StationAiHealthChangeActionEvent
       damage:
-        groups:
-          Burn: -150
-          Brute: -150
+        Burn: -150
+        Brute: -150
 
 - type: entity
   id: ActionStationAiEmergencySealant
