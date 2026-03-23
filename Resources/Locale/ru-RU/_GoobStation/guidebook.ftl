@@ -1,1 +1,1 @@
-﻿guide-entry-sm = Суперматерия
+guide-entry-sm = Суперматерия
