@@ -77,6 +77,8 @@ public sealed partial class IpcSystem : EntitySystem
         _action.AddAction(uid, ref component.ChangeFaceActionEntity, component.ChangeFaceAction);
         _movementSpeedModifier.RefreshMovementSpeedModifiers(uid);
 
+        if (!HasComp<VisualBodyComponent>(uid))
+            return;
         if (_visualBody.TryGatherMarkingsData(uid, null, out _, out _, out var applied)
             && applied.TryGetValue("Head", out var headMarkings)
             && headMarkings.TryGetValue(HumanoidVisualLayers.Snout, out var snoutMarkings)
@@ -110,7 +112,7 @@ public sealed partial class IpcSystem : EntitySystem
         if (component.DrainActivated && _powerCell.TryGetBatteryFromSlot(uid, out var battery))
         {
             EnsureComp<BatteryDrainerComponent>(uid);
-            _batteryDrainer.SetBattery(uid, battery);
+            _batteryDrainer.SetBattery(uid, battery.Value.Owner);
         }
         else
             RemComp<BatteryDrainerComponent>(uid);
@@ -125,6 +127,7 @@ public sealed partial class IpcSystem : EntitySystem
     private void OnRefreshMovementSpeedModifiers(EntityUid uid, IpcComponent comp, RefreshMovementSpeedModifiersEvent args)
     {
         if (!_powerCell.TryGetBatteryFromSlot(uid, out var battery)
+            || battery.Value.Comp.MaxCharge <= 0
             || _battery.GetCharge(battery.Value.AsNullable()) / battery.Value.Comp.MaxCharge < 0.01f)
         {
             args.ModifySpeed(0.2f);
@@ -149,6 +152,9 @@ public sealed partial class IpcSystem : EntitySystem
     }
     private void OnFaceSelected(Entity<IpcComponent> ent, ref IpcFaceSelectMessage msg)
     {
+        if (!_prototype.TryIndex<IpcFaceProfilePrototype>(ent.Comp.FaceProfile, out var faceProfile)
+            || !faceProfile.Faces.Contains(msg.State))
+            return;
         if (_visualBody.TryGatherMarkingsData(ent.Owner, null, out var profiles, out var markings, out var applied))
         {
             if (applied.TryGetValue("Head", out var headMarkings)
@@ -196,6 +202,7 @@ public sealed partial class IpcSystem : EntitySystem
             sound.MinInterval = TimeSpan.FromSeconds(15);
             sound.MaxInterval = TimeSpan.FromSeconds(30);
             sound.PopUp = Loc.GetString("sleep-ipc");
+            Dirty(uid, sound);
         }
         else
         {

@@ -51,6 +51,7 @@ public sealed class IpcSystem : EntitySystem
     private void UpdateBatteryAlert(Entity<IpcComponent> ent)
     {
         if (!_powerCell.TryGetBatteryFromSlot(ent.Owner, out var battery)
+            || battery.Value.Comp.MaxCharge <= 0
             || _battery.GetCharge(battery.Value.AsNullable()) / battery.Value.Comp.MaxCharge < 0.01f)
         {
             _alerts.ClearAlert(ent.Owner, ent.Comp.BatteryAlert);
