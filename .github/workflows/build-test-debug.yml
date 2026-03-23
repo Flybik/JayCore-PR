@@ -53,7 +53,7 @@ jobs:
         $env:DOTNET_gcServer=1
         $env:DOTNET_GCHeapHardLimit = 0xC00000000
         $env:DOTNET_GCHighMemPercent=0x4B
-        dotnet test --no-build 1m --configuration DebugOpt Content.IntegrationTests/Content.IntegrationTests.csproj -- NUnit.ConsoleOut=0 NUnit.MapWarningTo=Failed
+        dotnet test --no-build --configuration DebugOpt Content.IntegrationTests/Content.IntegrationTests.csproj -- NUnit.ConsoleOut=0 NUnit.MapWarningTo=Failed
   ci-success:
     name: Build & Test Debug
     needs:
