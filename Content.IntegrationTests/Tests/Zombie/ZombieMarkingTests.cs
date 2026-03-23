@@ -11,7 +11,7 @@ public sealed class ZombieMarkingTests : InteractionTest
 {
     protected override string PlayerPrototype => "MobVulpkanin";
 
-    [Test, Ignore("Fucking testing")]
+    [Test]
     public async Task ProfileApplication()
     {
         await Server.WaitAssertion(() =>
@@ -38,7 +38,7 @@ public sealed class ZombieMarkingTests : InteractionTest
         });
     }
 
-    [Test, Ignore("Fucking testing")]
+    [Test]
     public async Task MarkingApplication()
     {
         await Server.WaitAssertion(() =>
