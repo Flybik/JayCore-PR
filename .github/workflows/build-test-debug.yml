@@ -50,9 +50,7 @@ jobs:
     - name: Run Content.IntegrationTests
       shell: pwsh
       run: |
-        $env:DOTNET_gcServer=1
-        $env:DOTNET_GCHeapHardLimit = 0x380000000
-        $env:DOTNET_GCHighMemPercent = 0x3C
+        $env:DOTNET_gcServer=0
         dotnet test --no-build --configuration DebugOpt Content.IntegrationTests/Content.IntegrationTests.csproj -- NUnit.ConsoleOut=0 NUnit.MapWarningTo=Failed
   ci-success:
     name: Build & Test Debug
