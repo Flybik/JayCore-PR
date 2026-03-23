@@ -45,24 +45,28 @@ jobs:
       run: dotnet build --configuration DebugOpt --no-restore /m
 
     - name: Run Content.Tests
-      run: dotnet test --no-build --configuration DebugOpt Content.Tests/Content.Tests.csproj -- NUnit.ConsoleOut=0
-
-    - name: Set up swap space
-      uses: pierotofy/set-swap-space@v1.0
-      with:
-        swap-size-gb: 10
+      shell: pwsh
+      run: dotnet test --no-build --configuration DebugOpt Content.Tests/Content.Tests.csproj -- NUnit.ConsoleOut=0 NUnit.TestOutputXml="logs" NUnit.WorkDirectory="$(pwd)/test_results"
 
     - name: Run Content.IntegrationTests
       shell: pwsh
       run: |
         $env:DOTNET_gcServer=1
-        $env:DOTNET_gcAllowVeryLargeObjects=1
-        dotnet test --no-build --configuration DebugOpt Content.IntegrationTests/Content.IntegrationTests.csproj --logger "console;verbosity=minimal" -- NUnit.ConsoleOut=0 NUnit.InternalTraceLevel=Off NUnit.MapWarningTo=Failed
+        dotnet test --no-build --configuration DebugOpt Content.IntegrationTests/Content.IntegrationTests.csproj -- NUnit.ConsoleOut=0 NUnit.MapWarningTo=Failed NUnit.TestOutputXml="logs" NUnit.WorkDirectory="$(pwd)/test_results"
+
+    - name: Archive NUnit3 test results.
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: nunit3-results-${{ matrix.os }}
+        path: test_results/*
+        retention-days: 7
+        compression-level: 9
   ci-success:
     name: Build & Test Debug
     needs:
-      - build
+    - build
     runs-on: ubuntu-latest
     steps:
-      - name: CI succeeded
-        run: exit 0
+    - name: CI succeeded
+      run: exit 0
